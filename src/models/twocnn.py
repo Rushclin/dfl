@@ -1,6 +1,8 @@
 import torch
 
+import logging
 
+logger = logging.Logger(__name__)
 
 class TwoCNN(torch.nn.Module): # McMahan et al., 2016; 1,663,370 parameters
     def __init__(self, in_channels, hidden_size, num_classes):
@@ -26,6 +28,7 @@ class TwoCNN(torch.nn.Module): # McMahan et al., 2016; 1,663,370 parameters
         )
 
     def forward(self, x):
+        logger.info(f"IIIIIIIIIIII {self.hidden_size}")
         x = self.features(x)
         x = self.classifier(x)
         return x

@@ -9,7 +9,7 @@ from importlib import import_module
 from torch.utils.tensorboard import SummaryWriter
 
 from src import Range, set_logger, check_args, set_seed, load_dataset, load_model, tensorboard_runner
-
+from src.nodes.node import Node
 
 def main(args, writer):
 
@@ -21,15 +21,12 @@ def main(args, writer):
 
     model, args = load_model(args)
 
-    server_class = import_module(f'src.server.{args.algorithm}server').__dict__[
-        f'{args.algorithm.title()}Server']
-    server = server_class(args=args, writer=writer, server_dataset=server_dataset,
-                          client_datasets=client_datasets, model=model)
-
+    server = Node(args=args, writer=writer, client_datasets=client_datasets, server_dataset=server_dataset, model=model)
+    
     for curr_round in range(1, args.R + 1):
         server.round = curr_round
 
-        selected_ids = server.update()
+        selected_ids = server.train_round()
 
         if (curr_round % args.eval_every == 0) or (curr_round == args.R):
             server.evaluate(excluded_ids=selected_ids)

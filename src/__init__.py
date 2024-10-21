@@ -2,7 +2,7 @@ import logging
 
 from .utils import set_seed, Range, TensorBoardRunner, check_args, init_weights, TqdmToLogger, MetricManager, stratified_split, tensorboard_runner
 from .loaders import load_dataset, load_model
-
+from .client import Client
 
 
 def set_logger(path, args):

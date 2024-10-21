@@ -1,4 +1,3 @@
-import torch
 import inspect
 import logging
 import importlib

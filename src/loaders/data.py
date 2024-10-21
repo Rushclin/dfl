@@ -3,7 +3,7 @@ import gc
 import logging
 import concurrent.futures
 from torch.utils.data import Subset, Dataset
-from torchvision.transforms import Compose, Resize, ToTensor, Normalize
+from torchvision.transforms import Compose, Resize, ToTensor, Normalize, Grayscale
 
 from src import TqdmToLogger, stratified_split
 from .split import split
@@ -49,7 +49,8 @@ def load_dataset(args):
             [
                 Resize((args.resize, args.resize)),
                 ToTensor(),
-                Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5])
+                Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5]),
+                Grayscale(num_output_channels=1) # TODO! Just for MNIST
             ]
         )
         return transform
