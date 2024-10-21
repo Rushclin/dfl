@@ -21,26 +21,6 @@ class BaseNode(metaclass=ABCMeta):
     def model(self, model):
         self.__model = model
 
-    # @abstractmethod
-    # def update(self):
-    #     raise NotImplementedError
-
     @abstractmethod
     def evaluate(self):
         raise NotImplementedError
-
-    # @abstractmethod
-    # def download(self):
-    #     raise NotImplementedError
-
-    # @abstractmethod
-    # def upload(self):
-    #     raise NotImplementedError
-
-    # @abstractmethod
-    # def __len__(self):
-    #     raise NotImplementedError
-
-    # @abstractmethod
-    # def __repr__(self):
-    #     raise NotImplementedError

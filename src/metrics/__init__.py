@@ -1,1 +1,1 @@
-from .metricszoo import *
+from .metrics import *

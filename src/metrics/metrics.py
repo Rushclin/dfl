@@ -11,8 +11,6 @@ from .basemetric import BaseMetric
 
 warnings.filterwarnings('ignore')
 
-
-
 class Acc1(BaseMetric):
     def __init__(self):
         self.scores = []

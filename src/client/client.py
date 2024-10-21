@@ -26,8 +26,6 @@ class Client(BaseClient):
         self.training_set = training_set
         self.test_set = test_set
 
-        print(f"TEST ====> {test_set}")
-
         # Set up the optimizer and criterion (loss function) based on provided arguments.
         self.optim = torch.optim.__dict__[self.args.optimizer]
         self.criterion = torch.nn.__dict__[self.args.criterion]
