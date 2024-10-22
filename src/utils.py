@@ -1,8 +1,3 @@
-# Copyright (c) Takam Rushclin
-"""
-Train and eval functions used in main.py
-"""
-
 import os
 import sys
 import torch

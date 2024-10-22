@@ -153,15 +153,3 @@ N'hésitez pas à contribuer au projet en ouvrant des pull requests ou en signal
 ---
 
 Merci d'avoir utilisé ce framework d'apprentissage fédéré décentralisé. Bonne expérimentation !
-```
-
-### Explication du README :
-1. **Introduction** : Présente brièvement le projet et ses objectifs.
-2. **Fonctionnalités** : Résume les principales fonctionnalités offertes par le projet.
-3. **Prérequis** et **Installation** : Indique les étapes pour préparer l'environnement et installer les dépendances.
-4. **Exécution du projet** : Explique comment exécuter le projet avec un exemple de commande.
-5. **Structure du projet** : Donne une vue d'ensemble de l'architecture du projet, avec les principaux fichiers.
-6. **Utilisation des composants** : Explique le rôle des différentes classes/fonctions clés et leur utilisation.
-7. **Contributeurs** : Liste les contributeurs au projet avec des liens vers leur profil GitHub.
-
-Cela permet de bien comprendre le fonctionnement et l'exécution du projet.

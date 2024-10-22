@@ -50,9 +50,9 @@ class Node(BaseNode):
         Returns:
             model: Initialized model with set weights.
         """
-        logger.info(f'[{self.args.algorithm.upper()}] [{self.args.dataset.upper()}] [Round: {str(self.round).zfill(4)}] Initializing model!')
+        logger.info(f'[{self.args.dataset.upper()}] [Round: {str(self.round).zfill(4)}] Initializing model!')
         init_weights(model, self.args.init_type, self.args.init_gain)
-        logger.info(f'[{self.args.algorithm.upper()}] [{self.args.dataset.upper()}] [Round: {str(self.round).zfill(4)}] ...Model initialization complete ({self.args.model_name})!')
+        logger.info(f'[{self.args.dataset.upper()}] [Round: {str(self.round).zfill(4)}] ...Model initialization complete ({self.args.model_name})!')
         return model
 
     def _create_clients(self, client_datasets):
@@ -77,11 +77,11 @@ class Node(BaseNode):
             for identifier, datasets in TqdmToLogger(
                 enumerate(client_datasets),
                 logger=logger,
-                desc=f'[{self.args.algorithm.upper()}] [{self.args.dataset.upper()}] [Round: {str(self.round).zfill(4)}] ...Creating clients... ',
+                desc=f'[{self.args.dataset.upper()}] [Round: {str(self.round).zfill(4)}] ...Creating clients... ',
                 total=len(client_datasets)
             ):
                 clients.append(workhorse.submit(__create_client, identifier, datasets).result())
-        logger.info(f'[{self.args.algorithm.upper()}] [{self.args.dataset.upper()}] [Round: {str(self.round).zfill(4)}] ...{self.args.K} clients created!')
+        logger.info(f'[{self.args.dataset.upper()}] [Round: {str(self.round).zfill(4)}] ...{self.args.K} clients created!')
         return clients
 
     def _sample_clients(self, exclude=[]):
@@ -94,7 +94,7 @@ class Node(BaseNode):
         Returns:
             sampled_client_ids: List of sampled client IDs.
         """
-        logger.info(f'[{self.args.algorithm.upper()}] [{self.args.dataset.upper()}] [Round: {str(self.round).zfill(4)}] Sampling clients!')
+        logger.info(f'[{self.args.dataset.upper()}] [Round: {str(self.round).zfill(4)}] Sampling clients!')
         if exclude == []:
             # Sample clients based on a fraction 'C' of total clients 'K'
             num_sampled_clients = max(int(self.args.C * self.args.K), 1)
@@ -109,7 +109,7 @@ class Node(BaseNode):
                 num_sampled_clients = max(int(self.args.eval_fraction * num_unparticipated_clients), 1)
                 sampled_client_ids = sorted(random.sample([identifier for identifier in [
                     i for i in range(self.args.K)] if identifier not in exclude], num_sampled_clients))
-        logger.info(f'[{self.args.algorithm.upper()}] [{self.args.dataset.upper()}] [Round: {str(self.round).zfill(4)}] ...{num_sampled_clients} clients sampled!')
+        logger.info(f'[{self.args.dataset.upper()}] [Round: {str(self.round).zfill(4)}] ...{num_sampled_clients} clients sampled!')
         return sampled_client_ids
 
     def _elect_server(self, sampled_client_ids):
@@ -151,12 +151,12 @@ class Node(BaseNode):
             eval_result = client.evaluate()
             return {client.id: len(client.test_set)}, {client.id: eval_result}
 
-        logger.info(f'[{self.args.algorithm.upper()}] [{self.args.dataset.upper()}] [Round: {str(self.round).zfill(4)}] Requesting {"evaluation" if eval else "updates"} from clients...')
+        logger.info(f'[{self.args.dataset.upper()}] [Round: {str(self.round).zfill(4)}] Requesting {"evaluation" if eval else "updates"} from clients...')
         jobs, results = [], []
         # Parallelize requests using ThreadPoolExecutor
         with concurrent.futures.ThreadPoolExecutor(max_workers=min(len(ids), os.cpu_count() - 1)) as workhorse:
             for idx in TqdmToLogger(ids, logger=logger,
-                                    desc=f'[{self.args.algorithm.upper()}] [{self.args.dataset.upper()}] [Round: {str(self.round).zfill(4)}] Requesting client {"evaluation" if eval else "updates"}... ',
+                                    desc=f'[{self.args.dataset.upper()}] [Round: {str(self.round).zfill(4)}] Requesting client {"evaluation" if eval else "updates"}... ',
                                     total=len(ids)):
                 if eval:
                     jobs.append(workhorse.submit(__evaluate_clients, self.clients[idx]))
@@ -179,7 +179,7 @@ class Node(BaseNode):
         Returns:
             aggregated_model: The aggregated global model.
         """
-        logger.info(f'[{self.args.algorithm.upper()}] [{self.args.dataset.upper()}] [Round: {str(self.round).zfill(4)}] Aggregating models on client {elected_client.id}...')
+        logger.info(f'[{self.args.dataset.upper()}] [Round: {str(self.round).zfill(4)}] Aggregating models on client {elected_client.id}...')
         
         total_data_points = sum(updated_sizes.values())
         
@@ -199,7 +199,7 @@ class Node(BaseNode):
         # Load the aggregated model into the elected client's model
         elected_client.model.load_state_dict(aggregated_model)
         
-        logger.info(f'[{self.args.algorithm.upper()}] [{self.args.dataset.upper()}] [Round: {str(self.round).zfill(4)}] Aggregation complete on client {elected_client.id}.')
+        logger.info(f'[{self.args.dataset.upper()}] [Round: {str(self.round).zfill(4)}] Aggregation complete on client {elected_client.id}.')
         
         return aggregated_model
 
@@ -276,7 +276,7 @@ class Node(BaseNode):
         mm.aggregate(len(self.server_dataset))
         result = mm.results
 
-        server_log_string = f'[{self.args.algorithm.upper()}] [{self.args.dataset.upper()}] [Round: {str(self.round).zfill(4)}] Server Evaluation: '
+        server_log_string = f'[{self.args.dataset.upper()}] [Round: {str(self.round).zfill(4)}] Server Evaluation: '
         loss = result['loss']
         server_log_string += f'| Loss: {loss:.4f} '
         for metric, value in result['metrics'].items():
@@ -293,9 +293,9 @@ class Node(BaseNode):
         """
         Finalize the training process by saving the global model and results.
         """
-        logger.info(f'[{self.args.algorithm.upper()}] [{self.args.dataset.upper()}] [Round: {str(self.round).zfill(4)}] Saving final model!')
+        logger.info(f'[{self.args.dataset.upper()}] [Round: {str(self.round).zfill(4)}] Saving final model!')
         with open(os.path.join(self.args.result_path, f'{self.args.exp_name}.json'), 'w', encoding='utf8') as result_file:
             json.dump(self.results, result_file, indent=4)
         torch.save(self.global_model.state_dict(), os.path.join(self.args.result_path, f'{self.args.exp_name}.pt'))
         self.writer.close()
-        logger.info(f'[{self.args.algorithm.upper()}] [{self.args.dataset.upper()}] [Round: {str(self.round).zfill(4)}] ...Training completed!')
+        logger.info(f'[{self.args.dataset.upper()}] [Round: {str(self.round).zfill(4)}] ...Training completed!')
